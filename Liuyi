@@ -1,0 +1,165 @@
+#creat a class for student.
+#attributes: name, course.
+#actions:added/removed/modified course
+class Student:
+    def __init__(self, name):
+        self.name = name
+        self.courses={}
+    
+    def add_course(self, courseId, mark):
+        self.courses[courseId] = mark
+    
+    def delete_course(self, courseId):
+        self.courses.pop(courseId, None)
+        
+    def modify_course(self, courseId, newCourseId, mark):
+        self.courses.pop(courseId, None)
+        self.courses[newCourseId]=mark
+        
+#creat student and course array
+studentList=[]
+courseList=[]
+
+# while loop for continue action
+isContinue=True
+while isContinue:
+    isContinue=False
+    print ('1.Student')
+    print ('2.Program Admin')
+    isAdminAnswer = input( 'Choose your status')
+    
+#status is student, if on the studentlist:show his/her name, course, grade. else:print error
+    if(isAdminAnswer=='1'):
+        name = input("What is your name:\n")
+        for s in studentList:
+            if name==s.name:
+                print(s.name , s.courses)
+            else:
+                print('You are not on the System. Please contact to the Program Admin')
+#statue is program admin, choose one of the three action:
+    elif(isAdminAnswer=='2'):
+        
+        print('1. Adding/ Deleting / Modifying Course ')
+        print('2. Adding/ Deleting / Modifying Students ')
+        print('3. Enrol / Unenroll / Grade Students in a Course')
+        first_action =int (input('Choose your action'))
+        
+#1. Adding/ Deleting / Modifying Course
+        if first_action == 1:
+            course_action= int (input('what you want to do\n:1. Add Course, 2. Delete Course, 3. Modify Course'))
+            if course_action==1:
+                course = input("Please enter the course name:\n")
+                courseList.append(course)
+            elif course_action==2:
+                course= input("Please enter the course name:\n")
+                for student in studentList:
+                    if course in student.courses:
+                        student.delete_course(course)
+                courseList.remove(course)
+            elif course_action==3:
+                course= input("Please enter the course name:\n")
+                new_course=input("Please enter the new course name:\n")
+                courseList.remove(course)
+                
+        #if student already enrol the couse , delete the course meanwhile delete the student's enrollment
+                for student in studentList:
+                    if course in student.courses: 
+                        student.delete_course(course)
+                courseList.append(new_course)
+            else:
+                print("plese input right number")
+#3. Enrol / Unenroll / Grade Students in a Course
+#The prerequisite for this step: the course and student must on the course list and student list
+#Unenrollment means removing a student from a course (not from the system).
+#Removing a student means completely deleting the student from the program.           
+        elif first_action == 3:
+            enrol_action=int (input('what you want to do\n:1. Enrol Course, 2. Unenroll Course, 3. Modify enrol Course'))
+            name = input("Please enter the student name:\n")
+            student=next((x for x in studentList if x.name == name), None)
+            if student is None:
+                student = Student(name)
+                print('Student is not on the list. Please add student firstly')
+                
+            else:   
+                if enrol_action==1:
+                    courseId=input('Please enrol courseId from course list:')
+                    
+                    if courseId in courseList:
+                        mark=input('Please add the grade of the course:\n')
+                        student.add_course(courseId, mark)
+                    else:
+                        print('Course is not on the list. Please add course firstly')
+                        
+                elif enrol_action==2:
+                    courseId=input('Please unenrol courseId from course list:')
+                    if courseId in courseList:
+                        student.delete_course(courseId)
+                    else:
+                        print('Course is not on the list. Please add course firstly')
+                        
+                elif enrol_action==3:
+                    courseId=input('please add courseId from course list:')
+                    if courseId in courseList:
+                        newCourseId=input('please add newCourseId :')   
+                        mark=input('please add the mark of the course:\n')
+                        student.modify_course(courseId,newCourseId,mark)
+                    else:
+                         print('Course is not on the list. Please add course firstly')    
+                else:
+                        print("plese input right number")
+                        
+#2. Adding/ Deleting / Modifying Students
+        elif first_action == 2:
+            student_action=int (input('what you want to do\n:1. Add Student, 2. Delete Student, 3. Modify Student'))
+           
+            if student_action == 1:
+                name = input("Please enter the student name:\n")
+                student=next((x for x in studentList if x.name == name), None)
+                if student is None:
+                   student = Student(name)
+                   studentList.append(student)
+                else:
+                    print('Student is already on the list')
+                    
+            elif student_action==2:
+                name = input("Please enter the student name:\n")
+                student=next((x for x in studentList if x.name == name), None)
+                if student is None:
+                   print('Student is not on the list')
+                else:
+                    studentList.remove(student)
+                    
+
+            elif student_action==3:
+                student=next((x for x in studentList if x.name == name), None)
+                if student is None:
+                   print('student is not on the list')
+                else:
+                    student=input('please the student you want to change:\n')
+                    newStudent=input('please add newStudent:\n')
+                    studentList.remove(student)
+                    studentList.append(newStudent)
+                    
+        else:
+             print('plese input right number')
+        print("student list:")
+        for s in studentList:
+            print(s.name )     
+        print("course list:", courseList)
+
+
+        print("The whole student and their courses taken:")
+        for s in studentList:
+            print(s.name , s.courses)
+        
+        
+    else:
+            print("plese input right number")
+         
+    isContinueAns=input('Do you want to continue?(y/n)\n')
+    if isContinueAns=='y':
+        isContinue=True
+    else:
+        isContinue=False
+    
+
